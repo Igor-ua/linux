@@ -1,1 +1,1 @@
-# Useful linux commands
+Different useful linux commands and service configurations in the scope of `ubuntu x32_64 16/18`
