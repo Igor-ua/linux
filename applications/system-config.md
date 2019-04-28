@@ -92,3 +92,40 @@ WantedBy=multi-user.target
 And then you exec:
 systemctl start foo@parameter1.service foo@parameter2.service
 ```
+
+Cleaning old kernels:
+```
+1. Find out current kernel version by uname-a
+
+2. Delete any old kernels:
+dpkg --list | grep linux-image
+
+rc  linux-image-4.10.0-42-generic         4.10.0-42.46   amd64   Linux kernel image for version 4.10.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-37-generic         4.13.0-37.42   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-38-generic         4.13.0-38.43   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-39-generic         4.13.0-39.44   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-41-generic         4.13.0-41.46   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-42-generic         4.13.0-42.47   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-43-generic         4.13.0-43.48   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-45-generic         4.13.0-45.50   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.13.0-46-generic         4.13.0-46.51   amd64   Linux kernel image for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-4.15.0-39-generic         4.15.0-39.42   amd64   Signed kernel image generic
+rc  linux-image-4.15.0-42-generic         4.15.0-42.45   amd64   Signed kernel image generic
+rc  linux-image-4.15.0-43-generic         4.15.0-43.46   amd64   Signed kernel image generic
+rc  linux-image-4.15.0-44-generic         4.15.0-44.47   amd64   Signed kernel image generic
+rc  linux-image-4.15.0-45-generic         4.15.0-45.48   amd64   Signed kernel image generic
+ii  linux-image-4.15.0-46-generic         4.15.0-46.49   amd64   Signed kernel image generic
+ii  linux-image-4.15.0-47-generic         4.15.0-47.50   amd64   Signed kernel image generic
+rc  linux-image-extra-4.13.0-38-generic   4.13.0-38.43   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-extra-4.13.0-39-generic   4.13.0-39.44   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-extra-4.13.0-41-generic   4.13.0-41.46   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-extra-4.13.0-42-generic   4.13.0-42.47   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-extra-4.13.0-43-generic   4.13.0-43.48   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-extra-4.13.0-45-generic   4.13.0-45.50   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+rc  linux-image-extra-4.13.0-46-generic   4.13.0-46.51   amd64   Linux kernel extra modules for version 4.13.0 on 64 bit x86 SMP
+ii  linux-image-generic                   4.15.0.47.49   amd64   Generic Linux kernel image
+
+3. Example:
+sudo apt-get purge linux-image-4.4.0-112-generic
+sudo rm -rf /boot/*-4.4.0-{112,116,119,121,124,127,128,93}-*
+```

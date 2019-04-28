@@ -42,3 +42,7 @@ Compress a folder into tar.gz:
 
 `tar -zcvf archive.tar.gz /home/name/folder/`
 
+Print with prettified output:
+
+`whereis python | tr " " "\n"`
+
