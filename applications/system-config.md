@@ -65,3 +65,30 @@ sudo apt -f install
 sudo dpkg --configure -a
 sudo apt -f install
 ```
+
+Creating a service that takes a parameter:
+```
+If Type=simple in your unit file, you can only specify one ExecStart, but you can add as many ExecStartPre,ExecStartPost`,
+but none of this is suited for long running commands, because they are executed serially and everything one start is killed before starting the next one.
+
+If Type=oneshot you can specify multiple ExecStart, they run serially not in parallel.
+
+If what you want is to run multiple units in parallel, there a few things you can do:
+
+If they differ on 1 param
+You can use template units, so you create a /etc/systemd/system/foo@.service. NOTE: (the @ is important).
+
+[Unit]
+Description=script description %I
+
+[Service]
+Type=simple
+ExecStart=/script.py %i
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+And then you exec:
+systemctl start foo@parameter1.service foo@parameter2.service
+```
