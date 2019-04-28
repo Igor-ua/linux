@@ -1,45 +1,12 @@
-# Set chmod for all folder (without files) - folders need flag 7 to let user enter it
-chmod -R u+rwX,go+rX,go-w ./*
+**Custom Ubuntu .bash_aliases config**
 
-# Set chmore recursively for all bins:
-chmod -R 660 ./*.bin
+```
+if xhost >& /dev/null ; then
+	alias mc='EDITOR=subl mc'
+else
+	alias mc='EDITOR=nano mc';
+fi
 
-# Chmod settings:
-# chmod 400 file - Read by owner
-# chmod 040 file - Read by group
-# chmod 004 file - Read by world
-
-# chmod 200 file - Write by owner
-# chmod 020 file - Write by group
-# chmod 002 file - Write by world
-
-# chmod 100 file - execute by owner
-# chmod 010 file - execute by group
-# chmod 001 file - execute by world
-
-# Recursively FIND all files in the current folder and it's subfolders that contain a text:
-grep -Ril "text_to_find" .*
-
-# Grep: print filename and the string that was found:
-grep -Er "text_to_find"
-
-# Get dir/disc size:
-sudo apt-get install ncdu
-ncdu
-du -shx * | sort -rh | head -10
-
-# Compress a folder into tar.gz:
-tar -zcvf archive.tar.gz /home/name/folder/
-
-# Services:
-alias services='sudo service --status-all | grep +'
-systemctl list-units --type service
-systemctl list-dependencies --type service
-
-
-############################################################################################################
-######    Different aliases:
-############################################################################################################
 alias ports='sudo netstat -naptu | grep LISTEN'
 alias cli='redis-cli -p 6400'
 alias build='mvn clean install -Dmaven.test.skip=true'
@@ -52,13 +19,47 @@ alias cd..='cd ..'
 alias hg-log='hg log --limit 5'
 alias clean-recent='rm ~/.local/share/recently-used.xbel'
 alias aa='ant all'
-alias services='service --status-all'
+alias services='sudo service --status-all | grep +'
+
+alias sb='virtualbox startvm "builder Ubuntu x32 (XR)" --type headless'
+alias se='systemctl list-unit-files | grep enabled'
+alias sr='systemctl | grep running'
+# systemctl list-units --type service
+# systemctl list-dependencies --type service
 
 # Example of the tail -f:
 # alias file-log='tail -f ~/path/to/log.log'
 
 export SYBASE_JRE6="/home/sybase/shared/JRE-6_0_6_64BIT"
 export SYBROOT="/home/sybase"
+
+# Docker
+alias dcu='docker-compose up'
+alias dcd='docker-compose down'
+alias dps='docker ps'
+alias dcc='docker rm $(docker ps -aq)'
+alias dci='docker rmi $(docker images --filter "dangling=true" -q --no-trunc)'
+alias dcn='docker network prune'
+alias prt='docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer'
+alias procd='ps aux | grep docker | tr -s " " | cut -d" " -f2'
+
+function datt {
+	docker exec -it $1 bash
+}
+
+function ds {
+	docker stop $1
+}
+
+function drmi {
+	# executes only with 1 param
+	if [ $# -eq 1 ]; then
+    	docker rmi -f $(docker images | grep $1 | awk '{print $3}')
+    else
+    	# executes with any other amount of params
+    	echo "Cann't execute function with params not equal to one"
+	fi
+}
 
 rc-update () {
 	cd ~/path/to
@@ -86,7 +87,7 @@ function rdesktop_proxy () {
   xfreerdp 127.0.0.1:51515
 }
 
-function reload-bash () {
+function rb () {
 	clear
 	echo [RELOAD SUCCESS]
 	. ~/.bash_aliases
@@ -119,5 +120,4 @@ function lazy-git() {
 	git commit -m "lazy-git commit"
 	git push
 }
-############################################################################################################
-############################################################################################################
+```
