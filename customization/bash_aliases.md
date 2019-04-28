@@ -7,6 +7,24 @@ else
 	alias mc='EDITOR=nano mc';
 fi
 
+function rm_duplicates_from_path {
+if [ -n "$PATH" ]; then
+  old_PATH=$PATH:; PATH=
+  while [ -n "$old_PATH" ]; do
+    x=${old_PATH%%:*}       # the first remaining entry
+    case $PATH: in
+      *:"$x":*) ;;          # already there
+      *) PATH=$PATH:$x;;    # not there yet
+    esac
+    old_PATH=${old_PATH#*:}
+  done
+  PATH=${PATH#:}
+  unset old_PATH x
+fi
+}
+
+rm_duplicates_from_path
+
 alias ports='sudo netstat -naptu | grep LISTEN'
 alias cli='redis-cli -p 6400'
 alias build='mvn clean install -Dmaven.test.skip=true'
@@ -33,6 +51,12 @@ alias sr='systemctl | grep running'
 export SYBASE_JRE6="/home/sybase/shared/JRE-6_0_6_64BIT"
 export SYBROOT="/home/sybase"
 
+export JAVA_HOME
+export M2_HOME
+
+PATH=$PATH:$JAVA_HOME/bin
+PATH=$PATH:$M2_HOME/bin
+
 # Docker
 alias dcu='docker-compose up'
 alias dcd='docker-compose down'
@@ -40,7 +64,6 @@ alias dps='docker ps'
 alias dcc='docker rm $(docker ps -aq)'
 alias dci='docker rmi $(docker images --filter "dangling=true" -q --no-trunc)'
 alias dcn='docker network prune'
-alias prt='docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer'
 alias procd='ps aux | grep docker | tr -s " " | cut -d" " -f2'
 
 function datt {
@@ -59,6 +82,13 @@ function drmi {
     	# executes with any other amount of params
     	echo "Cann't execute function with params not equal to one"
 	fi
+}
+
+function run_portainer() {
+  docker volume create portainer_data
+  echo 'Data created'
+  docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+  echo 'Portainer runed'
 }
 
 rc-update () {
@@ -87,10 +117,10 @@ function rdesktop_proxy () {
   xfreerdp 127.0.0.1:51515
 }
 
-function rb () {
-	clear
-	echo [RELOAD SUCCESS]
-	. ~/.bash_aliases
+function rb() {
+    . ~/.bash_aliases
+    rm_duplicates_from_path
+    echo 'DONE'
 }
 
 function bash-help () {
